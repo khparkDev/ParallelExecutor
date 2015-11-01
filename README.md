@@ -1,3 +1,3 @@
-# scmgs
-simple cloud mobile game server
+# ParallelExecutor
+parallel execute business logic
 first change
