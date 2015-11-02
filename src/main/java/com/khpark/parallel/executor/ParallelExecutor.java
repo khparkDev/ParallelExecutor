@@ -4,6 +4,7 @@ import static com.khpark.parallel.executor.ParallelExecutorConstants.CLASS_OBJEC
 import static com.khpark.parallel.executor.ParallelExecutorConstants.METHOD_NAME;
 import static com.khpark.parallel.executor.ParallelExecutorConstants.PARAMS;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -33,19 +34,22 @@ public class ParallelExecutor {
 	}
 
 	public Map<String, Object> executeParallelTask() {
-		executor = Executors.newFixedThreadPool(taskMap.size());
-		Map<String, Object> result = new HashMap<String, Object>();
-		taskMap.entrySet().parallelStream().forEach(tm -> futureMap.put(tm.getKey(), executor.submit(new ParallelWorkerThread(taskMap.get(tm.getKey())))));
-		futureMap.entrySet().parallelStream().forEach(fm -> {
-			try {
-				result.put(fm.getKey(), futureMap.get(fm.getKey()).get(5, TimeUnit.SECONDS));
-			} catch (Exception e) {
-				System.out.println("# executeParallelTask : " + e);
-			}
-		});
+		if (taskMap != null && taskMap.size() > 0) {
+			executor = Executors.newFixedThreadPool(taskMap.size());
+			Map<String, Object> result = new HashMap<String, Object>();
+			taskMap.entrySet().parallelStream().forEach(tm -> futureMap.put(tm.getKey(), executor.submit(new ParallelWorkerThread(taskMap.get(tm.getKey())))));
+			futureMap.entrySet().parallelStream().forEach(fm -> {
+				try {
+					result.put(fm.getKey(), futureMap.get(fm.getKey()).get(5, TimeUnit.SECONDS));
+				} catch (Exception e) {
+					System.out.println("# executeParallelTask : " + e);
+				}
+			});
 
-		executor.shutdownNow();
+			executor.shutdownNow();
+			return result;
+		}
 
-		return result;
+		return Collections.emptyMap();
 	}
 }
