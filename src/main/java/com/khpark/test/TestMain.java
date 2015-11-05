@@ -1,5 +1,7 @@
 package com.khpark.test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -31,13 +33,41 @@ public class TestMain {
 		service.testService((Boolean) true, (char) 'c', (byte) 1, (short) 1);
 	}
 
+	@SuppressWarnings("serial")
 	private static void parallelExecute(SampleService service, SampleModel model) {
+		List<Object> paramList1 = new ArrayList<Object>();
+		List<Object> paramList2 = new ArrayList<Object>() {
+			{
+				add(model);
+			}
+		};
+		List<Object> paramList3 = new ArrayList<Object>() {
+			{
+				add("message test!");
+			}
+		};
+		List<Object> paramList4 = new ArrayList<Object>() {
+			{
+				add(10);
+				add(12.2);
+				add(345.123F);
+			}
+		};
+		List<Object> paramList5 = new ArrayList<Object>() {
+			{
+				add((Boolean) true);
+				add((char) 'C');
+				add((byte) 1);
+				add((short) 1);
+			}
+		};
+
 		ParallelExecutor pe = new ParallelExecutor();
-		pe.addTask("service1", service, "testService");
-		pe.addTask("service2", service, "testService", model);
-		pe.addTask("service3", service, "testService", "message test!");
-		pe.addTask("service4", service, "testService", 10, 12.2, 345.123F);
-		pe.addTask("service5", service, "testService", (Boolean) true, (char) 'C', (byte) 1, (short) 1);
+		pe.addTask("service1", service, "testService", paramList1);
+		pe.addTask("service2", service, "testService", paramList2);
+		pe.addTask("service3", service, "testService", paramList3);
+		pe.addTask("service4", service, "testService", paramList4);
+		pe.addTask("service5", service, "testService", paramList5);
 		Map<String, Object> resultMap = pe.executeParallelTask();
 
 		resultMap.get("service1");

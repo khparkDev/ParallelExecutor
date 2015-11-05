@@ -6,13 +6,18 @@ import static com.khpark.parallel.executor.ParallelExecutorConstants.PARAMS;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ParallelExecutor {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ParallelExecutor.class);
 	private ExecutorService executor;
 	private Map<String, Map<String, Object>> taskMap;
 	private Map<String, Future<?>> futureMap;
@@ -23,12 +28,12 @@ public class ParallelExecutor {
 	}
 
 	@SuppressWarnings("serial")
-	public void addTask(String key, Object classObject, String methodName, Object... params) {
+	public void addTask(String key, Object classObject, String methodName, List<Object> paramList) {
 		taskMap.put(key, new HashMap<String, Object>() {
 			{
 				put(CLASS_OBJECT, classObject);
 				put(METHOD_NAME, methodName);
-				put(PARAMS, params);
+				put(PARAMS, paramList);
 			}
 		});
 	}
@@ -42,11 +47,12 @@ public class ParallelExecutor {
 				try {
 					result.put(fm.getKey(), futureMap.get(fm.getKey()).get(5, TimeUnit.SECONDS));
 				} catch (Exception e) {
-					System.out.println("# executeParallelTask : " + e);
+					LOGGER.error("executeParallelTask : ", e);
 				}
 			});
 
 			executor.shutdownNow();
+
 			return result;
 		}
 
