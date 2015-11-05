@@ -4,9 +4,10 @@ import com.khpark.model.SampleModel;
 
 public class SampleService {
 
-	public void testService() throws InterruptedException {
+	public boolean testService() throws InterruptedException {
 		Thread.sleep(100L);
 		System.out.println(getMethodName());
+		return true;
 	}
 
 	public void testService(SampleModel model) throws InterruptedException {

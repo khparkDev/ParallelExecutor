@@ -19,11 +19,10 @@ public class ParallelWorkerThread implements Callable<Object> {
 	private Object[] taskParam;
 	private Class[] taskParamClassType;
 
-	@SuppressWarnings("unchecked")
 	public ParallelWorkerThread(Map<String, Object> task) {
 		classObject = task.get(CLASS_OBJECT);
 		methodName = (String) task.get(METHOD_NAME);
-		List<Object> paramList = (List<Object>) task.get(PARAMS);
+		List<Object> paramList = ((ParamBuilder) task.get(PARAMS)).getParameterList();
 		taskParam = paramList.toArray();
 		taskParamClassType = new Class[paramList.size()];
 
@@ -47,7 +46,7 @@ public class ParallelWorkerThread implements Callable<Object> {
 				String taskParamTypeName = taskParamClassType[i].getSimpleName().toLowerCase();
 				String methodParamTypeName = methodParams[i].getSimpleName().toLowerCase();
 
-				if (!taskParamTypeName.equals(methodParamTypeName)) {
+				if (!taskParamTypeName.contains(methodParamTypeName)) {
 					isSameMethod = false;
 					break;
 				}
