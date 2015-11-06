@@ -1,10 +1,10 @@
 package com.khpark.test;
 
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import com.khpark.model.SampleModel;
-import com.khpark.parallel.executor.ParallelExecutor;
+import com.khpark.parallel.executor.CallbackExecutor;
+import com.khpark.parallel.executor.DefaultExecutor;
 import com.khpark.parallel.executor.ParamBuilder;
 import com.khpark.service.SampleService;
 
@@ -14,7 +14,9 @@ public class TestMain {
 		SampleService service = new SampleService();
 		SampleModel model = new SampleModel().setName("testName").setAge(20);
 		nonParallelExecute(service, model);
+		System.out.println();
 		parallelExecuteCallback(service, model);
+		System.out.println();
 		parallelExecute(service, model);
 	}
 
@@ -30,23 +32,22 @@ public class TestMain {
 	}
 
 	private static void parallelExecuteCallback(SampleService service, SampleModel model) {
-		ParallelExecutor pe = new ParallelExecutor();
-		pe.addTaskCallback("service1", service, "testService", new ParamBuilder());
-		pe.addTaskCallback("service2", service, "testService", new ParamBuilder().add(model));
-		pe.addTaskCallback("service3", service, "testService", new ParamBuilder().add("message test!"));
-		pe.addTaskCallback("service4", service, "testService", new ParamBuilder().add(10).add(12.2).add(345.123F));
-		pe.addTaskCallback("service5", service, "testService", new ParamBuilder().add((Boolean) true).add((char) 'C').add((byte) 1).add((short) 1));
-		Map<String, Object> resultMap = pe.executeParallelTaskCallback();
-		System.out.println(resultMap.toString());
+		CallbackExecutor ce = new CallbackExecutor();
+		ce.addTaskCallback("service1", service, "testService", new ParamBuilder());
+		ce.addTaskCallback("service2", service, "testService", new ParamBuilder().add(model));
+		ce.addTaskCallback("service3", service, "testService", new ParamBuilder().add("message test!"));
+		ce.addTaskCallback("service4", service, "testService", new ParamBuilder().add(10).add(12.2).add(345.123F));
+		ce.addTaskCallback("service5", service, "testService", new ParamBuilder().add((Boolean) true).add((char) 'C').add((byte) 1).add((short) 1));
+		ce.executeParallelTaskCallback();
 	}
 
 	private static void parallelExecute(SampleService service, SampleModel model) {
-		ParallelExecutor pe = new ParallelExecutor();
-		pe.addTask(service, "testService", new ParamBuilder());
-		pe.addTask(service, "testService", new ParamBuilder().add(model));
-		pe.addTask(service, "testService", new ParamBuilder().add("message test!"));
-		pe.addTask(service, "testService", new ParamBuilder().add(10).add(12.2).add(345.123F));
-		pe.addTask(service, "testService", new ParamBuilder().add((Boolean) true).add((char) 'C').add((byte) 1).add((short) 1));
-		pe.executeParallelTask();
+		DefaultExecutor de = new DefaultExecutor();
+		de.addTask(service, "testService", new ParamBuilder());
+		de.addTask(service, "testService", new ParamBuilder().add(model));
+		de.addTask(service, "testService", new ParamBuilder().add("message test!"));
+		de.addTask(service, "testService", new ParamBuilder().add(10).add(12.2).add(345.123F));
+		de.addTask(service, "testService", new ParamBuilder().add((Boolean) true).add((char) 'C').add((byte) 1).add((short) 1));
+		de.executeParallelTask();
 	}
 }

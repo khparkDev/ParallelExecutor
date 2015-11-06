@@ -11,7 +11,7 @@ public class SampleService {
 	}
 
 	public void testService(SampleModel model) throws InterruptedException {
-		Thread.sleep(100L);
+		Thread.sleep((long) (Math.random() * 100 + 100));
 		System.out.println(getMethodName() + " = {model.getName() = " + model.getName() + "}");
 	}
 
