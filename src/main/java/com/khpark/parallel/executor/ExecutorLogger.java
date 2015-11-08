@@ -1,5 +1,6 @@
 package com.khpark.parallel.executor;
 
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 public class ExecutorLogger {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExecutorLogger.class);
 	private Map<String, Long> timer = new HashMap<String, Long>();
+	private static final int FIXED_LENGTH = 38;
 
 	public void setStartTimeTask(String key) {
 		timer.put(key, System.currentTimeMillis());
@@ -23,32 +25,43 @@ public class ExecutorLogger {
 		prettyPrint();
 	}
 
+	@SuppressWarnings("resource")
 	private void prettyPrint() {
-		StringBuilder sb = new StringBuilder();
-		int firstKeyLength = timer.keySet().stream().findFirst().toString().length();
-		int columnCount = firstKeyLength + 30;
+		StringBuffer sb = new StringBuffer();
+		Formatter f = new Formatter(sb);
+
+		int maxKeyLength = timer.entrySet().stream().max((x, y) -> Integer.compare(x.getKey().length(), y.getKey().length())).get().getKey().length();
+		int columnCount = maxKeyLength + FIXED_LENGTH;
 		String line = "";
 
 		for (int i = 0; i < columnCount; i++) {
 			line += "-";
 		}
 
-		sb.append("\n" + line + "\n");
+		f.format("%n%s%n", line);
 
 		for (String keyName : timer.keySet()) {
-			sb.append(" taskName = ").append(keyName);
-			sb.append(", execute time =  ");
-			sb.append(timer.get(keyName));
-			sb.append(" ms\n");
+			f.format("%s ", "taskName = " + keyName + addEmptySpace(keyName, maxKeyLength));
+			f.format("%s %n", ", execute time = " + timer.get(keyName) + " ms");
 		}
 
 		long longestTime = timer.entrySet().stream().max((x, y) -> Long.compare(x.getValue(), y.getValue())).get().getValue();
-		sb.append(line + "\n");
-		sb.append(" Total Execute time = " + longestTime + " ms\n");
-		sb.append(line + "\n");
+		f.format("%s%n", line);
+		f.format("%s %n", " Total Execute time = " + longestTime + " ms");
+		f.format("%s%n", line);
 
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug(sb.toString());
+			LOGGER.debug(f.toString());
 		}
+	}
+
+	private String addEmptySpace(String keyName, int maxKeyLength) {
+		int emptypSpaceLength = maxKeyLength - keyName.length();
+		String space = "";
+
+		for (int i = 0; i < emptypSpaceLength; i++) {
+			space += " ";
+		}
+		return space;
 	}
 }

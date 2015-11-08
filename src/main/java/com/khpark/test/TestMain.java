@@ -38,11 +38,11 @@ public class TestMain {
 
 	private static void parallelExecuteCallback(SampleService service, SampleModel model) {
 		CallbackExecutor ce = new CallbackExecutor();
-		ce.addTaskCallback("service1", service, "testService");
+		ce.addTaskCallback("service1NameTest", service, "testService");
 		ce.addTaskCallback("service2", service, "testService", new ParamBuilder().add(model));
 		ce.addTaskCallback("service3", service, "testService", new ParamBuilder().add("message test!"));
 		ce.addTaskCallback("service4", service, "testService", new ParamBuilder().add(10).add(12.2).add(345.123F));
-		ce.addTaskCallback("service5", service, "testService", new ParamBuilder().add((Boolean) true).add((char) 'C').add((byte) 1).add((short) 1));
+		ce.addTaskCallback("service5service5service5", service, "testService", new ParamBuilder().add((Boolean) true).add((char) 'C').add((byte) 1).add((short) 1));
 		ce.executeParallelTaskCallback();
 	}
 
