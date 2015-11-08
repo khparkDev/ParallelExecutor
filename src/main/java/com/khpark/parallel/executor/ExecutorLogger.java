@@ -1,11 +1,7 @@
 package com.khpark.parallel.executor;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,34 +26,29 @@ public class ExecutorLogger {
 	private void prettyPrint() {
 		StringBuilder sb = new StringBuilder();
 		int firstKeyLength = timer.keySet().stream().findFirst().toString().length();
-		int columnCount = firstKeyLength > 13 ? 25 + firstKeyLength : 25;
+		int columnCount = firstKeyLength + 30;
 		String line = "";
-		String emptySpace = "";
 
 		for (int i = 0; i < columnCount; i++) {
 			line += "-";
 		}
 
-		for (int i = 0; i < columnCount / 10; i++) {
-			emptySpace += " ";
-		}
-
-		sb.append("\n");
-		sb.append(line + "\n");
-		sb.append(" taskName " + emptySpace + " elasedTime (ms)\n");
-		sb.append(line + "\n");
+		sb.append("\n" + line + "\n");
 
 		for (String keyName : timer.keySet()) {
-			sb.append(" ").append(keyName).append(emptySpace);
-			sb.append(timer.get(keyName)).append("\n");
+			sb.append(" taskName = ").append(keyName);
+			sb.append(", execute time =  ");
+			sb.append(timer.get(keyName));
+			sb.append(" ms\n");
 		}
 
-		//timer.entrySet().stream().mapToLong()
-		
+		long longestTime = timer.entrySet().stream().max((x, y) -> Long.compare(x.getValue(), y.getValue())).get().getValue();
 		sb.append(line + "\n");
-//		sb.append(" Execute time = " + timer.entrySet().stream().filter( + "\n");
+		sb.append(" Total Execute time = " + longestTime + " ms\n");
 		sb.append(line + "\n");
 
-		LOGGER.info(sb.toString());
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug(sb.toString());
+		}
 	}
 }

@@ -38,23 +38,22 @@ public class ParallelWorkerThread implements Callable<Object> {
 		        .filter(method -> method.getName().contains(methodName) && method.getParameterTypes().length == taskParamClassType.length)
 		        .collect(Collectors.toList());
 
+		if (taskParamClassType.length == 0) {
+			return methodList.get(0).invoke(classObject);
+		}
+
 		for (Method targetMethod : methodList) {
 			Class[] methodParams = targetMethod.getParameterTypes();
-			boolean isSameMethod = true;
 
 			for (int i = 0; i < taskParamClassType.length; i++) {
 				String taskParamTypeName = taskParamClassType[i].getSimpleName().toLowerCase();
 				String methodParamTypeName = methodParams[i].getSimpleName().toLowerCase();
 
-				if (!taskParamTypeName.contains(methodParamTypeName)) {
-					isSameMethod = false;
-					break;
-				}
-			}
+				if (taskParamTypeName.contains(methodParamTypeName)) {
+					targetMethod.setAccessible(true);
+					return targetMethod.invoke(classObject, taskParam);
 
-			if (isSameMethod) {
-				targetMethod.setAccessible(true);
-				return (methodParams.length > 0) ? targetMethod.invoke(classObject, taskParam) : targetMethod.invoke(classObject);
+				}
 			}
 		}
 

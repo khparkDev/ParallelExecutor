@@ -33,7 +33,7 @@ public class TestMain {
 
 	private static void parallelExecuteCallback(SampleService service, SampleModel model) {
 		CallbackExecutor ce = new CallbackExecutor();
-		ce.addTaskCallback("service1", service, "testService", new ParamBuilder());
+		ce.addTaskCallback("service1", service, "testService");
 		ce.addTaskCallback("service2", service, "testService", new ParamBuilder().add(model));
 		ce.addTaskCallback("service3", service, "testService", new ParamBuilder().add("message test!"));
 		ce.addTaskCallback("service4", service, "testService", new ParamBuilder().add(10).add(12.2).add(345.123F));
@@ -43,7 +43,7 @@ public class TestMain {
 
 	private static void parallelExecute(SampleService service, SampleModel model) {
 		DefaultExecutor de = new DefaultExecutor();
-		de.addTask(service, "testService", new ParamBuilder());
+		de.addTask(service, "testService");
 		de.addTask(service, "testService", new ParamBuilder().add(model));
 		de.addTask(service, "testService", new ParamBuilder().add("message test!"));
 		de.addTask(service, "testService", new ParamBuilder().add(10).add(12.2).add(345.123F));
