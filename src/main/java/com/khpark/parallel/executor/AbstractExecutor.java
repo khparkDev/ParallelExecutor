@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("serial")
 public class AbstractExecutor {
-	protected static final Logger LOGGER = LoggerFactory.getLogger(DefaultExecutor.class);
+	protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractExecutor.class);
 	protected Map<String, Map<String, Object>> taskMap;
 	protected Map<String, Future<?>> futureMap;
 	protected ExecutorService executor;

@@ -2,21 +2,26 @@ package com.khpark.test;
 
 import java.util.concurrent.ExecutionException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.khpark.model.SampleModel;
 import com.khpark.parallel.executor.CallbackExecutor;
 import com.khpark.parallel.executor.DefaultExecutor;
+import com.khpark.parallel.executor.ExecutorLogger;
 import com.khpark.parallel.executor.ParamBuilder;
 import com.khpark.service.SampleService;
 
 public class TestMain {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ExecutorLogger.class);
 
 	public static void main(String[] args) throws InterruptedException, ExecutionException, ClassNotFoundException {
 		SampleService service = new SampleService();
 		SampleModel model = new SampleModel().setName("testName").setAge(20);
 		nonParallelExecute(service, model);
-		System.out.println();
+		LOGGER.debug("");
 		parallelExecuteCallback(service, model);
-		System.out.println();
+		LOGGER.debug("");
 		parallelExecute(service, model);
 	}
 
@@ -28,7 +33,7 @@ public class TestMain {
 		service.testService(10, 12.2, 345.123F);
 		service.testService((Boolean) true, (char) 'c', (byte) 1, (short) 1);
 		long et1 = System.currentTimeMillis();
-		System.out.println("# nonParallelExecute time : " + (et1 - st) + " ms");
+		LOGGER.debug("# nonParallelExecute time : " + (et1 - st) + " ms");
 	}
 
 	private static void parallelExecuteCallback(SampleService service, SampleModel model) {
