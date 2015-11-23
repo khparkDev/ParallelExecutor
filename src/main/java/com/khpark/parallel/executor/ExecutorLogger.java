@@ -1,15 +1,15 @@
 package com.khpark.parallel.executor;
 
 import java.util.Formatter;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ExecutorLogger {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExecutorLogger.class);
-	private Map<String, Long> timer = new HashMap<String, Long>();
+	private Map<String, Long> timer = new ConcurrentHashMap<String, Long>();
 	private static final int FIXED_LENGTH = 38;
 
 	public void setStartTimeTask(String key) {

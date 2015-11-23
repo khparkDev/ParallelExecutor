@@ -1,13 +1,13 @@
 package com.khpark.parallel.executor;
 
 import static com.khpark.parallel.executor.ParallelExecutorConstants.CLASS_OBJECT;
-
 import static com.khpark.parallel.executor.ParallelExecutorConstants.METHOD_NAME;
 import static com.khpark.parallel.executor.ParallelExecutorConstants.PARAMS;
 import static com.khpark.parallel.executor.ParallelExecutorConstants.TIMEOUT_SEC;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -27,7 +27,7 @@ public class AbstractExecutor {
 	protected int index;
 
 	public AbstractExecutor() {
-		taskMap = new HashMap<String, Map<String, Object>>();
+		taskMap = new ConcurrentHashMap<String, Map<String, Object>>();
 		futureMap = new HashMap<String, Future<?>>();
 		result = new HashMap<String, Object>();
 		executorLogger = new ExecutorLogger();
@@ -53,7 +53,7 @@ public class AbstractExecutor {
 	}
 
 	protected void addTaskMap(String key, Object classObject, String methodName, ParamBuilder parameterBuilder) {
-		taskMap.put(key, new HashMap<String, Object>() {
+		taskMap.put(key, new ConcurrentHashMap<String, Object>() {
 			{
 				put(CLASS_OBJECT, classObject);
 				put(METHOD_NAME, methodName);
