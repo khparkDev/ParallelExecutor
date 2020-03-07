@@ -1,16 +1,13 @@
 package com.khpark.parallel.executor;
 
-import static com.khpark.parallel.executor.ParallelExecutorConstants.CLASS_OBJECT;
-import static com.khpark.parallel.executor.ParallelExecutorConstants.EMTPY_OBJECT;
-import static com.khpark.parallel.executor.ParallelExecutorConstants.METHOD_NAME;
-import static com.khpark.parallel.executor.ParallelExecutorConstants.PARAMS;
-
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static com.khpark.parallel.executor.ParallelExecutorConstants.*;
 
 @SuppressWarnings("rawtypes")
 public class ParallelWorkerThread implements Callable<Object> {
@@ -57,6 +54,6 @@ public class ParallelWorkerThread implements Callable<Object> {
 			}
 		}
 
-		return EMTPY_OBJECT;
+		return EMPTY_OBJECT;
 	}
 }

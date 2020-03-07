@@ -4,18 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ParamBuilder {
-	private List<Object> parameterList;
+    private List<Object> parameterList;
 
-	public ParamBuilder() {
-		parameterList = new ArrayList<Object>();
-	}
+    public ParamBuilder() {
+        parameterList = new ArrayList<>();
+    }
 
-	public List<Object> getParameterList() {
-		return parameterList;
-	}
+    public List<Object> getParameterList() {
+        return parameterList;
+    }
 
-	public ParamBuilder add(Object obj) {
-		parameterList.add(obj);
-		return this;
-	}
+    public ParamBuilder add(Object obj) {
+        parameterList.add(obj);
+        return this;
+    }
 }
